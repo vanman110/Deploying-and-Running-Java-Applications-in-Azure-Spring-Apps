@@ -143,7 +143,7 @@ Now that you have all the networking resources ready, you need to recreate your 
 
 When you recreate your Spring Apps instance in the virtual network, you will also need to rerun some of the steps from the previous exercise:
 
-- Reconfigure the Application Configuration Service.
+- Recreate the config server.
 - Recreate and redeploy all apps. In the previous exercises you assigned an endpoint to the `api-gateway` and `app-admin` service apps. At this point, in this task, you will skip this step and, instead, you will do so later in this exercise, once you configure the internal DNS name resolution.
 - Reassign a user assigned managed identity to each of the apps (for `customers-service`, `vets-service` and `visits-service` only) and give them access to the Azure Key Vault so they can access the secrets in there.
 - Recreate the service connections to the database.
@@ -165,17 +165,13 @@ When you recreate your Spring Apps instance in the virtual network, you will als
    ```bash
    SPRING_APPS_SERVICE_VNET=sa-vnet-$APPNAME-$UNIQUEID
    az config set defaults.group=$RESOURCE_GROUP defaults.spring=$SPRING_APPS_SERVICE_VNET
-   az spring create \
+   az spring create  \
        --resource-group $RESOURCE_GROUP \
        --name $SPRING_APPS_SERVICE_VNET \
-       --sku enterprise \
        --vnet $VIRTUAL_NETWORK_NAME \
        --service-runtime-subnet service-runtime-subnet \
        --app-subnet apps-subnet \
-       --enable-application-configuration-service \
-       --enable-service-registry \
-       --enable-gateway \
-       --enable-api-portal \
+       --sku standard \
        --location $LOCATION
    ```
 
@@ -183,18 +179,16 @@ When you recreate your Spring Apps instance in the virtual network, you will als
 
    > **Note**: Notice the differences in this create statement to the first time you created the Spring Apps service. You are now also indicating in which vnet and subnets the deployment should happen.
 
-1. Set up the Application Configuration Service.
+1. Set up the config server.
 
    ```bash
-   az spring application-configuration-service git repo add \
-       --resource-group $RESOURCE_GROUP \
-       --name spring-petclinic-config \
-       --service $SPRING_APPS_SERVICE_VNET \
-       --label main \
-       --patterns "api-gateway,customers-service,vets-service,visits-service,admin-server,messaging-emulator" \
-       --uri $GIT_REPO \
-       --password $GIT_PASSWORD \
-       --username $GIT_USERNAME
+   az spring config-server git set \
+        --name $SPRING_APPS_SERVICE_VNET \
+        --resource-group $RESOURCE_GROUP \
+        --uri $GIT_REPO \
+        --label main \
+        --password $GIT_PASSWORD \
+        --username $GIT_USERNAME
    ```
 
    > **Note**: In case you are using a branch other than `main` in your config repo, you can change the branch name with the `label` parameter.
@@ -221,26 +215,6 @@ When you recreate your Spring Apps instance in the virtual network, you will als
    ```
 
    > **Note**: Wait for the provisioning of each app to complete. This might take about 5 minutes for each app.
-
-1. Bind these application to the Application Configuration Service.
-
-   ```bash
-   az spring application-configuration-service bind --app ${API_GATEWAY}
-   az spring application-configuration-service bind --app ${ADMIN_SERVER}
-   az spring application-configuration-service bind --app ${CUSTOMERS_SERVICE}
-   az spring application-configuration-service bind --app ${VETS_SERVICE}
-   az spring application-configuration-service bind --app ${VISITS_SERVICE}
-   ```
-
-1. Bind them as well to the service registry.
-
-   ```bash
-   az spring service-registry bind --app ${API_GATEWAY}
-   az spring service-registry bind --app ${ADMIN_SERVER}
-   az spring service-registry bind --app ${CUSTOMERS_SERVICE}
-   az spring service-registry bind --app ${VETS_SERVICE}
-   az spring service-registry bind --app ${VISITS_SERVICE}
-   ```
 
 1. Reassign the user assigned managed identities to the apps. Since you are using user assigned managed identities here, you can reuse them and you don't need to reapply role assignments to them.
 
@@ -297,23 +271,23 @@ When you recreate your Spring Apps instance in the virtual network, you will als
    ```bash
    cd ~/workspaces/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/src
    az spring app deploy --name ${API_GATEWAY} \
-       --config-file-patterns ${API_GATEWAY} \
+       --no-wait \
        --artifact-path ${API_GATEWAY_JAR}
    
    az spring app deploy --name ${ADMIN_SERVER} \
-       --config-file-patterns ${ADMIN_SERVER} \
+       --no-wait \
        --artifact-path ${ADMIN_SERVER_JAR}
    
    az spring app deploy --name ${CUSTOMERS_SERVICE} \
-       --config-file-patterns ${CUSTOMERS_SERVICE} \
+       --no-wait \
        --artifact-path ${CUSTOMERS_SERVICE_JAR} 
       
    az spring app deploy --name ${VETS_SERVICE} \
-       --config-file-patterns ${VETS_SERVICE}  \
+       --no-wait \
        --artifact-path ${VETS_SERVICE_JAR} 
 
    az spring app deploy --name ${VISITS_SERVICE} \
-       --config-file-patterns ${VISITS_SERVICE} \
+       --no-wait \
        --artifact-path ${VISITS_SERVICE_JAR} 
    ```
 

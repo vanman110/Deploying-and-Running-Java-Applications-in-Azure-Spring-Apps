@@ -46,7 +46,7 @@ During this challenge, you will:
 
 > **Note**: Follow the steps in the [install instructions](../../../install.md) to set up this lab on your platform of choice.
 
-### Create an Azure Spring Apps Enterprise service
+### Create an Azure Spring Apps service
 
 As the first step, you will create an Azure Spring Apps Service instance. You will use for this purpose Azure CLI. If you are interested in accomplishing this programmatically, review the Microsoft documentation that describes the provisioning process.
 
