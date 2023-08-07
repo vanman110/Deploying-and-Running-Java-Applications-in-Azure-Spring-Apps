@@ -126,8 +126,6 @@ Since each of these apps already has a user assigned managed identity assigned t
 
    ```bash
    az spring connection create mysql-flexible \
-       --resource-group $RESOURCE_GROUP \
-       --service $SPRING_APPS_SERVICE \
        --app $CUSTOMERS_SERVICE \
        --target-resource-group $RESOURCE_GROUP \
        --server $MYSQL_SERVER_NAME \
@@ -139,14 +137,10 @@ Since each of these apps already has a user assigned managed identity assigned t
 
    ```bash
    CONNECTION=$(az spring connection list \
-       --resource-group $RESOURCE_GROUP \
-       --service $SPRING_APPS_SERVICE \
        --app $CUSTOMERS_SERVICE \
        --query [].id -o tsv)
    
    az spring connection validate \
-       --resource-group ${RESOURCE_GROUP} \
-       --service ${SPRING_APPS_SERVICE} \
        --app ${CUSTOMERS_SERVICE} \
        --id $CONNECTION
    ```
@@ -157,8 +151,6 @@ Since each of these apps already has a user assigned managed identity assigned t
 
    ```bash
    az spring connection create mysql-flexible \
-       --resource-group $RESOURCE_GROUP \
-       --service $SPRING_APPS_SERVICE \
        --app $VISITS_SERVICE \
        --target-resource-group $RESOURCE_GROUP \
        --server $MYSQL_SERVER_NAME \
@@ -166,8 +158,6 @@ Since each of these apps already has a user assigned managed identity assigned t
        --user-identity mysql-identity-id=$ADMIN_IDENTITY_RESOURCE_ID client-id=$VISITS_SERVICE_CID subs-id=$SUBID
    
    az spring connection create mysql-flexible \
-       --resource-group $RESOURCE_GROUP \
-       --service $SPRING_APPS_SERVICE \
        --app $VETS_SERVICE \
        --target-resource-group $RESOURCE_GROUP \
        --server $MYSQL_SERVER_NAME \
@@ -245,15 +235,15 @@ The following three apps of your application use the database hosted by the Azur
 
    ```bash
    az spring app deploy --name ${CUSTOMERS_SERVICE} \
-       --config-file-patterns ${CUSTOMERS_SERVICE} \
+       --no-wait \
        --artifact-path ${CUSTOMERS_SERVICE_JAR} 
    
    az spring app deploy --name ${VETS_SERVICE} \
-       --config-file-patterns ${VETS_SERVICE}  \
+       --no-wait \
        --artifact-path ${VETS_SERVICE_JAR} 
    
    az spring app deploy --name ${VISITS_SERVICE} \
-       --config-file-patterns ${VISITS_SERVICE} \
+       --no-wait \
        --artifact-path ${VISITS_SERVICE_JAR} 
    ```
 
@@ -265,7 +255,7 @@ The following three apps of your application use the database hosted by the Azur
    az spring app logs --name ${CUSTOMERS_SERVICE} --follow 
    ```
 
-   > **Note**: In case you see no errors, you can escape out of the log statement with `Ctrl+C` and you can proceed with the next steps. In case you see errors, review the steps you executed and retry. The [LabTips file](../../LabTips.md) also contains steps on how to recover from errors.
+   > **Note**: In case you see no errors, you can escape out of the log statement with `Ctrl+C` and you can proceed with the next steps. In case you see errors, review the steps you executed and retry. The [LabTips file](../../../LabTips.md) also contains steps on how to recover from errors.
 
 </details>
 
