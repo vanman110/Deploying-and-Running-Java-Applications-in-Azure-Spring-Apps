@@ -40,15 +40,10 @@ During this challenge, you will:
 
 ### Create Event Hub resource
 
-You will first need to create an Azure Event Hub namespace to send events to. Create an Event Hub namespace and assign to it a globally unique name. In the namespace you will then create an event hub named `telemetry`. You can use the following guidance to implement these changes:
+You will first need to create an Azure Event Hub namespace to send events to. Create an Event Hub namespace and assign to it a globally unique name. In the namespace you will then create an event hub named `telemetry`. You will be connecting to the Event Hub by authenticating with the managed identities you created in earlier labs. You can use the following guidance to implement these changes:
 
 - [Quickstart: Create an event hub using Azure CLI](https://docs.microsoft.com/azure/event-hubs/event-hubs-quickstart-cli).
-
-You should add the connection string to the `telemetry` event hub in your Key Vault so the microservices can safely retrieve this value.
-
-   > **Note**: As an alternative you can use the Managed Identity of your microservice to connect to the event hub. For this challenge however you will store the connection string in your Key Vault. You can use the following guidance to implement these changes: [Authenticate a managed identity with Azure Active Directory to access Event Hubs Resources](https://docs.microsoft.com/azure/event-hubs/authenticate-managed-identity?tabs=latest).
-
-The connection to the event hub needs to be stored in the `spring.kafka.properties.sasl.jaas.config` application property. Store its value in a Key Vault secret named `SPRING-KAFKA-PROPERTIES-SASL-JAAS-CONFIG`.
+- [Authenticate a managed identity with Azure Active Directory to access Event Hubs Resources](https://docs.microsoft.com/azure/event-hubs/authenticate-managed-identity?tabs=latest).
 
 <details>
 <summary>hint</summary>
@@ -305,7 +300,7 @@ You will now implement the functionality that will allow you to emulate sending 
 
 1. Save the changes to all 4 files.
 
-1. In the config repository you will need to add the configuration for sending messages to the event hub. Replace the contents of the current `application.yml` file with the contents of [this application.yml](../../config/06_application.yml) file. Make sure you fill out your current Key Vault name on line `36`. This file includes the following changes:
+1. In the config repository you will need to add the configuration for sending messages to the event hub. Replace the contents of the current `application.yml` file with the contents of [this application.yml](../../../config/06_application.yml) file. Make sure you fill out your current Key Vault name on line `36`. This file includes the following changes:
 
    - It configures the output stream for `supply-out-0` to use the telemetry endpoint of the event hub on line `40`.
    - It indicates the namespace you want to connect to on line `51`. Make sure to provide here the name of your event hubs namespace.
@@ -333,7 +328,7 @@ You will now implement the functionality that will allow you to emulate sending 
 
    ```bash
    az spring app deploy --name ${CUSTOMERS_SERVICE} \
-       --config-file-patterns ${CUSTOMERS_SERVICE} \
+       --no-wait \
        --artifact-path ${CUSTOMERS_SERVICE_JAR} 
    ```
 
@@ -343,7 +338,7 @@ You will now implement the functionality that will allow you to emulate sending 
    az spring app logs --name ${CUSTOMERS_SERVICE} --follow
    ```
 
-   > **Note**: In case you see errors, review the steps you executed and retry. The [LabTips file](../../LabTips.md) also contains steps on how to recover from errors.
+   > **Note**: In case you see errors, review the steps you executed and retry. The [LabTips file](../../../LabTips.md) also contains steps on how to recover from errors.
 
 1. With the log stream still open, in your browser window, navigate to the applications public endpoint and select `Owners - Register`. On the registration page, fill out the details for a new owner and select `Submit`. When you select `Submit` you should see output in the `customers` service logs indicating events were send to the eventhub. 
 
@@ -397,7 +392,7 @@ In this task, you will update the vets microservice to receive events from the t
    az role assignment create --assignee $VETS_SERVICE_CID --role 'Storage Blob Data Owner' --scope $STORAGE_ACCOUNT_ID/containers/$STORAGE_CONTAINER
    ```
 
-1. In the config repository you will need to add the configuration for receiving messages from the event hub. Replace the contents of the current `application.yml` file with the contents of [this application.yml](../../config/06b_application.yml) file. Make sure you fill out your current Key Vault name on line `36` and the name of your event hub namespace on line `54`. This file includes the following changes:
+1. In the config repository you will need to add the configuration for receiving messages from the event hub. Replace the contents of the current `application.yml` file with the contents of [this application.yml](../../../config/06b_application.yml) file. Make sure you fill out your current Key Vault name on line `36` and the name of your event hub namespace on line `54`. This file includes the following changes:
 
    - An additional `consume` binding for the `$Default` consumer group of the `telemetry` event hub on line `40` to `42`.
    - An additional `checkpoint-store` for the `eventshubs-binder` container of your storage account on lines `56` to `58`. Make sure you fill out the name of your storage account on line `58`.
@@ -537,7 +532,7 @@ In this task, you will update the vets microservice to receive events from the t
 
    ```bash
    az spring app deploy --name ${VETS_SERVICE} \
-       --config-file-patterns ${VETS_SERVICE}  \
+       --no-wait  \
        --artifact-path ${VETS_SERVICE_JAR} 
    ```
 
@@ -557,7 +552,7 @@ To conclude this lab, you will create another owner in the application to send e
    az spring app logs --name ${VETS_SERVICE} --follow
    ```
 
-   > **Note**: In case you see errors, review the steps you executed and retry. The [LabTips file](../../LabTips.md) also contains steps on how to recover from errors.
+   > **Note**: In case you see errors, review the steps you executed and retry. The [LabTips file](../../../LabTips.md) also contains steps on how to recover from errors.
 
 1. In your browser window, navigate to the applications' public endpoint and select `Owners - Register`. On the registration page, fill out the details for a new owner and select `Submit`. When you select `Submit` you should see output in the `vets` service logs indicating events were received from the eventhub. 
 
