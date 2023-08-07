@@ -48,7 +48,7 @@ During this challenge, you will:
 
 ### Create an Azure Spring Apps Enterprise service
 
-As the next step, you will create an Azure Spring Apps Enterprise Service instance. You will use for this purpose Azure CLI. If you are interested in accomplishing this programmatically, review the Microsoft documentation that describes the provisioning process.
+As the first step, you will create an Azure Spring Apps Enterprise Service instance. You will use for this purpose Azure CLI. If you are interested in accomplishing this programmatically, review the Microsoft documentation that describes the provisioning process.
 
 - [Quickstart: Provision Azure Spring Apps using Azure CLI](https://learn.microsoft.com/azure/spring-apps/quickstart-deploy-infrastructure-vnet-azure-cli?tabs=azure-spring-apps-enterprise)
 
@@ -78,7 +78,7 @@ As the next step, you will create an Azure Spring Apps Enterprise Service instan
    az account set --subscription <subscription-id>
    ```
 
-1. Run the following commands to create a resource group that will contain all of your resources (replace the `<azure-region>` placeholder with the name of any Azure region in which you can create an Enterprise SKU instance of the Azure Spring Apps service and an Azure Database for MySQL Single Server instance, see [this page](https://azure.microsoft.com/global-infrastructure/services/?products=mysql,spring-apps&regions=all) for regional availability details of those services):
+1. Run the following commands to create a resource group that will contain all of your resources (replace the `<azure-region>` placeholder with the name of any Azure region in which you can create an Enterprise SKU instance of the Azure Spring Apps service and an Azure Database for MySQL Flexible Server instance, see [this page](https://azure.microsoft.com/global-infrastructure/services/?products=mysql,spring-apps&regions=all) for regional availability details of those services):
 
    ```bash
    UNIQUEID=$(openssl rand -hex 3)
@@ -157,7 +157,7 @@ As the next step, you will create an Azure Spring Apps Enterprise Service instan
 ### Set up the config repository
 
 
-Azure Spring Apps Enterprise service provides an Application Configuration Service for the use of Spring apps. As part of its setup, you need to link it to a git repo. The current configuration used by the Spring microservices resides in the [config folder of the GitHub repository of this lab](https://github.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/tree/MicrosoftLearning/master/config). You will need to create your own private git repo in this exercise, since, in one of its steps, you will be changing some of the configuration settings.
+Azure Spring Apps Enterprise service provides an Application Configuration Service for the use of Spring apps. As part of its setup, you need to link it to a git repo. The current configuration used by the Spring microservices resides in the [config folder of the GitHub repository of this lab](https://github.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/tree/master/config). You will need to create your own private git repo in this exercise, since, in one of its steps, you will be changing some of the configuration settings.
 
 As part of the setup process, you need to create a Personal Access Token (PAT) in your GitHub repo and make it available to the Application Configuration Service. It is important that you make note of the PAT after it has been created.
 
@@ -319,7 +319,7 @@ You will also need to update the config for your applications to use the newly p
         --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
    ```
 
-1. From the Git Bash window, in the config repository you cloned locally, use your favorite text editor to open the _application.yml_ file. Replace the full contents of the _application.yml_ file with the contents of [this application.yml](../../config/02_application.yml) file. The updated _application.yml_ file includes the following changes:
+1. From the Git Bash window, in the config repository you cloned locally, use your favorite text editor to open the _application.yml_ file. Replace the full contents of the _application.yml_ file with the contents of [this application.yml](../../../config/02_application.yml) file. The updated _application.yml_ file includes the following changes:
 
    * It changes the default `spring.sql.init` values to use `mysql` configuration on lines 15 to 19.
    * It adds a `spring.datasource` property for your mysql database on lines 10 to 14.
@@ -475,7 +475,7 @@ You now have the compute and data services available for deployment of the compo
    az spring app logs --name ${CUSTOMERS_SERVICE} --follow 
    ```
 
-   > **Note**: In case you see no errors, you can escape out of the log statement with `Ctrl+C` and you can proceed with the next steps. In case you see errors, review the steps you executed and retry. The [LabTips file](../../LabTips.md) also contains steps on how to recover from errors.
+   > **Note**: In case you see no errors, you can escape out of the log statement with `Ctrl+C` and you can proceed with the next steps. In case you see errors, review the steps you executed and retry. The [LabTips file](../../../LabTips.md) also contains steps on how to recover from errors.
 
 1. Next, you will create, bind and deploy an app for the `visits-service` microservice, also without an endpoint assigned:
 
@@ -537,7 +537,7 @@ Now that you have deployed all of your microservices, verify that the applicatio
    az spring app show --name ${API_GATEWAY} | grep url
    ```
 
-1. Alternatively, you can switch to the web browser window displaying the Azure portal interface, navigate to your Azure Spring Apps instance and select **Apps** from the vertical navigation menu. In the list of apps, select **api-gateway**, on the **api-gateway \| Overview** page, note the value of the **URL** property.
+1. Alternatively, you can switch to the web browser window displaying the Azure portal interface, navigate to your Azure Spring Apps instance and select **Apps** from the vertical navigation menu. In the list of apps, select **api-gateway**, on the **api-gateway | Overview** page, note the value of the **URL** property.
 
 1. Open another web browser tab and navigate to the URL of the api-gateway endpoint to display the application web interface.
 

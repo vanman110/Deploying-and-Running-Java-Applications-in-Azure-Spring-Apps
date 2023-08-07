@@ -54,7 +54,7 @@ To start, you will learn about the existing Spring Petclinic application.
 <summary>hint</summary>
 <br/>
 
-1. Use the steps in the [install instructions](../../install.md) to startup this project with your setup tooling of choice.
+1. Use the steps in the [install instructions](../../../install.md) to startup this project with your setup tooling of choice.
 
 </details>
 
