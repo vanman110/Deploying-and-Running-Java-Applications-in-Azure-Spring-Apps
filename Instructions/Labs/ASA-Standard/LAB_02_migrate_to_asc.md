@@ -179,19 +179,19 @@ As part of the setup process, you need to create a Personal Access Token (PAT) i
 
     > **Note**: Make sure to replace the `<token>` and `<your-github-username>` placeholders in the URL listed above with the value of the GitHub PAT and your GitHub user name when running the `git clone` command.
 
-1. From the Git Bash prompt, change the current directory to the newly created **spring-petclinic-microservices-config** folder and run the following commands to copy all the config server configuration yaml files from the [config folder of this labs' GitHub repository](https://github.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/tree/MicrosoftLearning/master/config) to the local folder on your lab computer.
+1. From the Git Bash prompt, change the current directory to the newly created **spring-petclinic-microservices-config** folder and run the following commands to copy all the config server configuration yaml files from the [config folder of this labs' GitHub repository](https://github.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/tree/master/config) to the local folder on your lab computer.
 
    ```bash
    cd spring-petclinic-microservices-config
    curl -o admin-server.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/config/admin-server.yml
-   curl -o api-gateway.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/api-gateway.yml
-   curl -o application.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/application.yml
-   curl -o customers-service.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/customers-service.yml
-   curl -o discovery-server.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/discovery-server.yml
-   curl -o tracing-server.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/tracing-server.yml
-   curl -o vets-service.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/vets-service.yml
-   curl -o visits-service.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/visits-service.yml
-   curl -o messaging-emulator.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/messaging-emulator.yml
+   curl -o api-gateway.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/config/api-gateway.yml
+   curl -o application.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/config/application.yml
+   curl -o customers-service.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/config/customers-service.yml
+   curl -o discovery-server.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/config/discovery-server.yml
+   curl -o tracing-server.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/config/tracing-server.yml
+   curl -o vets-service.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/config/vets-service.yml
+   curl -o visits-service.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/config/visits-service.yml
+   curl -o messaging-emulator.yml https://raw.githubusercontent.com/MicrosoftLearning/Deploying-and-Running-Java-Applications-in-Azure-Spring-Apps/master/config/messaging-emulator.yml
    ```
 
 1. From the Git Bash prompt, run the following commands to commit and push your changes to your private GitHub repository.
