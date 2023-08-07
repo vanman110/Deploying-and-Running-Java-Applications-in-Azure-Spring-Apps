@@ -190,12 +190,16 @@ When you recreate your Spring Apps instance in the virtual network, you will als
        --resource-group $RESOURCE_GROUP \
        --name spring-petclinic-config \
        --service $SPRING_APPS_SERVICE_VNET \
-       --label asa-solution-3.0-vnet \
+       --label main \
        --patterns "api-gateway,customers-service,vets-service,visits-service,admin-server,messaging-emulator" \
        --uri $GIT_REPO \
        --password $GIT_PASSWORD \
        --username $GIT_USERNAME
    ```
+
+   > **Note**: In case you are using a branch other than `main` in your config repo, you can change the branch name with the `label` parameter.
+
+   > **Note**: Wait for the operation to complete. This might take about 10 minutes.
 
 1. Recreate each of the apps in Spring Apps.
 
