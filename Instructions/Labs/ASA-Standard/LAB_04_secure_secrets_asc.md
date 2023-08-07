@@ -106,7 +106,7 @@ These secrets should be called `SPRING-DATASOURCE-URL`, `SPRING-DATASOURCE-USERN
 
 The apps deployed as the Spring Petclinic microservices will connect to the newly created Key Vault using a managed identity. The process of creating a managed identity will automatically create an Azure Active Directory service principal for your application. Managed identities minimize the overhead associated with managing service principals, since their secrets used for authentication are automatically rotated. In this lab you will make use of user assigned managed identities. These allow you to reuse these identities in case you need to recreate your apps. You can use the following guidance to determine how to assign a managed identity to a Spring Apps service application:
 
-- [Manage user-assigned managed identities for an application in Azure Spring Apps](https://learn.microsoft.com/azure/spring-apps/how-to-manage-user-assigned-managed-identities?tabs=azure-cli&pivots=sc-enterprise).
+- [Manage user-assigned managed identities for an application in Azure Spring Apps](https://learn.microsoft.com/azure/spring-apps/how-to-manage-user-assigned-managed-identities?tabs=azure-cli&pivots=sc-standard).
 
 The following three apps of your application use the database hosted by the Azure Database for MySQL Flexible Server instance, so they will need to be assigned a managed identity:
 
@@ -200,7 +200,7 @@ You now have all relevant components in place to switch to the secrets stored in
 <summary>hint</summary>
 <br/>
 
-1. From the Git Bash window, in the config repository you cloned locally, use your favorite text editor to open the `application.yml` file. Replace the contents of this file with the contents of this [application.yml](../../config/04_application.yml) file. This file contains the following changes:
+1. From the Git Bash window, in the config repository you cloned locally, use your favorite text editor to open the `application.yml` file. Replace the contents of this file with the contents of this [application.yml](../../../config/04_application.yml) file. This file contains the following changes:
 
     * The spring.datasource properties are no longer there. These are now in your Key Vault and are no longer needed in the application.yml file.
     * Line 25 to 32 contain new config for your Key Vault. Make sure you replace the `<your-kv-name>` placeholder on line 31 with the name of your Key Vault.
@@ -284,17 +284,20 @@ You now have all relevant components in place to switch to the secrets stored in
 1. Redeploy the customers, visits and vets services to their respective apps in your Spring Apps service by running the following commands:
 
    ```bash
-   az spring app deploy --name ${CUSTOMERS_SERVICE} \
-       --config-file-patterns ${CUSTOMERS_SERVICE} \
-       --artifact-path ${CUSTOMERS_SERVICE_JAR} 
-   
-   az spring app deploy --name ${VETS_SERVICE} \
-       --config-file-patterns ${VETS_SERVICE}  \
-       --artifact-path ${VETS_SERVICE_JAR}
-   
-   az spring app deploy --name ${VISITS_SERVICE} \
-       --config-file-patterns ${VISITS_SERVICE} \
-       --artifact-path ${VISITS_SERVICE_JAR} 
+   az spring app deploy \
+            --name ${CUSTOMERS_SERVICE} \
+            --no-wait \
+            --artifact-path ${CUSTOMERS_SERVICE_JAR} 
+
+   az spring app deploy \
+               --name ${VISITS_SERVICE} \
+               --no-wait \
+               --artifact-path ${VISITS_SERVICE_JAR} 
+
+   az spring app deploy \
+               --name ${VETS_SERVICE} \
+               --no-wait \
+               --artifact-path ${VETS_SERVICE_JAR}
    ```
 
 1. Retest your application through its public endpoint. Ensure that the application is functional, while the connection string secrets are retrieved from Azure Key Vault.
@@ -305,7 +308,7 @@ You now have all relevant components in place to switch to the secrets stored in
    az spring app logs --name ${CUSTOMERS_SERVICE} --follow 
    ```
 
-   > **Note**: In case you see no errors, you can escape out of the log statement with `Ctrl+C` and you can proceed with the next steps. In case you see errors, review the steps you executed and retry. The [LabTips file](../../LabTips.md) also contains steps on how to recover from errors.
+   > **Note**: In case you see no errors, you can escape out of the log statement with `Ctrl+C` and you can proceed with the next steps. In case you see errors, review the steps you executed and retry. The [LabTips file](../../../LabTips.md) also contains steps on how to recover from errors.
 
 1. To verify that secrets from Key Vault are picked up, in the Azure Portal, navigate to the page of the Azure Key Vault instance you provisioned. On the Overview page, select the **Monitoring** tab and review the graph representing requests for access to the vault's secrets.
 
