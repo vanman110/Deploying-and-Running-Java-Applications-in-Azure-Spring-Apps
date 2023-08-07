@@ -154,38 +154,13 @@ In the spring-petclinic-microservices repository, the `spring-petclinic-messagin
 1. Create a new application in your Spring Apps service for the `messaging-emulator` and assign a public endpoint to it.
 
    ```bash
+   MESSAGING_EMULATOR=messaging-emulator
    az spring app create \
        --name $MESSAGING_EMULATOR \
        --assign-endpoint true
    ```
 
    > **Note**: Wait for the provisioning to complete. This might take about 3 minutes.
-
-1. Update the Application Configuration Service to also pick up the messaging-emulator config.
-
-   ```bash
-   az spring application-configuration-service git repo update \
-       --resource-group $RESOURCE_GROUP \
-       --name spring-petclinic-config \
-       --service $SPRING_APPS_SERVICE \
-       --label main \
-       --patterns "api-gateway,customers-service,vets-service,visits-service,admin-server,messaging-emulator" \
-       --uri $GIT_REPO \
-       --password $GIT_PASSWORD \
-       --username $GIT_USERNAME
-   ```
-
-   > **Note**: In case you are using a branch other than `main` in your config repo, you can change the branch name with the `label` parameter.
-
-   > **Note**: Wait for the operation to complete. This might take about 2 minutes.
-
-1. Bind this new app to the Application Configuration Service and to the Service Registry.
-
-   ```bash
-   az spring application-configuration-service bind --app ${MESSAGING_EMULATOR}
-   
-   az spring service-registry bind --app ${MESSAGING_EMULATOR}
-   ```
 
 1. Create a new user assigned managed identity for this new application and assign it to the `messaging-emulator` app:
 
@@ -216,8 +191,6 @@ In the spring-petclinic-microservices repository, the `spring-petclinic-messagin
    MESSAGING_EMULATOR_CID=$(az identity show -g $RESOURCE_GROUP -n messaging-svc-uid --query clientId -o tsv)
     
    az spring connection create mysql-flexible \
-       --resource-group $RESOURCE_GROUP \
-       --service $SPRING_APPS_SERVICE \
        --app $MESSAGING_EMULATOR \
        --target-resource-group $RESOURCE_GROUP \
        --server $MYSQL_SERVER_NAME \
@@ -231,7 +204,7 @@ In the spring-petclinic-microservices repository, the `spring-petclinic-messagin
    MESSAGING_EMULATOR_JAR=spring-petclinic-messaging-emulator/target/spring-petclinic-messaging-emulator-$VERSION.jar
    
    az spring app deploy --name ${MESSAGING_EMULATOR} \
-       --config-file-patterns ${MESSAGING_EMULATOR} \
+       --no-wait \
        --artifact-path ${MESSAGING_EMULATOR_JAR}
    ```
 
@@ -493,7 +466,7 @@ This `VisitsReceiver` service is listening to the `visits-requests` queue. Each 
 
    ```bash
    az spring app deploy --name ${VISITS_SERVICE} \
-       --config-file-patterns ${VISITS_SERVICE} \
+       --no-wait \
        --artifact-path ${VISITS_SERVICE_JAR} 
    ```
 

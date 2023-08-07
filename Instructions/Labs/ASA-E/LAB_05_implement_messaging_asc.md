@@ -154,6 +154,7 @@ In the spring-petclinic-microservices repository, the `spring-petclinic-messagin
 1. Create a new application in your Spring Apps service for the `messaging-emulator` and assign a public endpoint to it.
 
    ```bash
+   MESSAGING_EMULATOR=messaging-emulator
    az spring app create \
        --name $MESSAGING_EMULATOR \
        --assign-endpoint true
