@@ -62,7 +62,7 @@ As the first step, you will create an Azure Spring Apps Enterprise Service insta
    az login
    ```
 
-> **Note**: In case you are running this lab in a GitHub codespace, use `az login --use-device-code`.
+   > **Note**: In case you are running this lab in a GitHub codespace, use `az login --use-device-code`.
 
 1. Executing the command will automatically open a web browser window prompting you to authenticate. Once prompted, sign in using the user account that has the Owner role in the target Azure subscription that you will use in this lab and close the web browser window.
 
