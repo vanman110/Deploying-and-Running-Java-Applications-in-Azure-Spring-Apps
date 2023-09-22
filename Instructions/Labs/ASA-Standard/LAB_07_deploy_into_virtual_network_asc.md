@@ -75,19 +75,16 @@ In later exercises you will be creating the private endpoints for the backend se
 1. Create subnets in this virtual network. Store the subnet names in environment variables, which will allow you to reference them later in this exercise. Your setup will need:  
   - 2 subnets intended for hosting Azure Spring Apps in this virtual network. 
   - 1 subnet intended for Application Gateway 
-  - 1 subnet for the private endpoints of the Azure Key Vault instance and optionally also your Service Bus and Event Hub.
-  - 1 subnet for deploying the MYSQL Flexible Server into, since Flexible Server does not support private endpoints.
+  - 1 subnet for the private endpoints of the Azure Key Vault instance, the MySQL Flexible server and optionally also your Service Bus and Event Hub.
 
    ```bash
    SERVICE_RUNTIME_SUBNET_CIDR=10.1.0.0/24
    APP_SUBNET_CIDR=10.1.1.0/24
    APPLICATION_GATEWAY_SUBNET_CIDR=10.1.2.0/24
    PRIVATE_ENDPOINTS_SUBNET_CIDR=10.1.3.0/24
-   DATABASE_SUBNET_CIDR=10.1.4.0/24
 
    APPLICATION_GATEWAY_SUBNET_NAME=app-gw-subnet
    PRIVATE_ENDPOINTS_SUBNET_NAME=private-endpoints-subnet
-   DATABASE_SUBNET_NAME=database-subnet
    
    az network vnet subnet create --resource-group $RESOURCE_GROUP \
        --vnet-name $VIRTUAL_NETWORK_NAME \
@@ -107,11 +104,6 @@ In later exercises you will be creating the private endpoints for the backend se
        --resource-group $RESOURCE_GROUP \
        --vnet-name $VIRTUAL_NETWORK_NAME \
        --address-prefix $PRIVATE_ENDPOINTS_SUBNET_CIDR
-   az network vnet subnet create \
-       --name $DATABASE_SUBNET_NAME \
-       --resource-group $RESOURCE_GROUP \
-       --vnet-name $VIRTUAL_NETWORK_NAME \
-       --address-prefix $DATABASE_SUBNET_CIDR
    ```
 
 1. Assign the Owner role-based access control (RBAC) role to the Azure Service Provider for Spring Apps access in the scope of the newly created virtual network. This will allow the resource provider to create its resources in the `service-runtime-subnet` and `apps-subnet` subnets. The GUID used in the second command is the service principal id for Azure Spring Apps.
